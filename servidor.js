@@ -19,7 +19,9 @@ let qrCodeData = '';
 let isClientReady = false;
 
 const client = new Client({
-    authStrategy: new LocalAuth(),
+    authStrategy: new LocalAuth({
+        clientId: 'prime-session'
+    }),
     puppeteer: {
         executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
         headless: true,
@@ -33,8 +35,7 @@ const client = new Client({
             '--disable-gpu',
             '--single-process',
             '--disable-extensions',
-            '--disable-web-security',
-            '--ignore-certificate-errors'
+            '--disable-web-security'
         ]
     }
 });
@@ -46,16 +47,10 @@ client.on('qr', (qr) => {
     }
 });
 
-client.on('ready', () => {
-    console.log('WhatsApp conectado com sucesso!');
-    isClientReady = true;
-    qrCodeData = '';
-});
-
+// Força a limpeza imediata assim que autentica no celular
 client.on('authenticated', () => {
     console.log('WhatsApp autenticado com sucesso!');
-    isClientReady = true;
-    qrCodeData = '';
+    qrCodeData = ''; // Limpa o QR Code imediatamente para sumir da tela
 });
 
 client.on('auth_failure', (msg) => {
@@ -63,10 +58,19 @@ client.on('auth_failure', (msg) => {
     isClientReady = false;
 });
 
+client.on('ready', () => {
+    console.log('WhatsApp conectado e pronto para uso!');
+    isClientReady = true;
+    qrCodeData = '';
+});
+
 client.on('disconnected', (reason) => {
     console.log('WhatsApp desconectado:', reason);
     isClientReady = false;
-    client.initialize();
+    qrCodeData = '';
+    setTimeout(() => {
+        client.initialize();
+    }, 5000);
 });
 
 client.initialize();
@@ -76,14 +80,17 @@ app.get('/', async (req, res) => {
         return res.send(`
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h1 style="color: #25D366;">✔ WhatsApp Conectado e Pronto para Uso!</h1>
-                <p>A API já pode receber requisições do seu site.</p>
+                <p>A API já está ativa e integrada ao seu site.</p>
             </div>
         `);
     }
-    if (!qrCodeData) {
+
+    // Se autenticou mas ainda está carregando o ready
+    if (!qrCodeData && !isClientReady) {
         return res.send(`
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
-                <h2>Iniciando sessão, aguarde alguns segundos e atualize a página...</h2>
+                <h2 style="color: #e67e22;">Dispositivo conectado! Carregando dados da sessão...</h2>
+                <p>Atualize esta página em 10 segundos.</p>
             </div>
         `);
     }
@@ -94,6 +101,7 @@ app.get('/', async (req, res) => {
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp"/>
+                <p style="margin-top:20px; color: #666;">Após escanear, atualize esta página.</p>
             </div>
         `);
     } catch (err) {
