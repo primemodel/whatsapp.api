@@ -4,8 +4,7 @@
   "description": "API integradora de whatsapp para plugin de confirmacao",
   "main": "servidor.js",
   "scripts": {
-    "start": "node servidor.js",
-    "postinstall": "npx puppeteer browsers install chrome@146.0.7680.31"
+    "start": "node servidor.js"
   },
   "dependencies": {
     "express": "^4.19.2",
