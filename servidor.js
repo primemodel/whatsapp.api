@@ -11,7 +11,8 @@ let isClientReady = false;
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        executablePath: '/opt/render/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome',
+        executablePath: '/usr/bin/chromium',
+        headless: true,
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
