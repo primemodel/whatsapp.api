@@ -1,0 +1,14 @@
+{
+  "name": "integracao-whatsapp",
+  "version": "1.0.0",
+  "description": "API integradora de whatsapp para plugin de confirmacao",
+  "main": "servidor.js",
+  "scripts": {
+    "start": "node servidor.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "whatsapp-web.js": "^1.23.0",
+    "qrcode": "^1.5.3"
+  }
+}
