@@ -1,13 +1,3 @@
-process.env.PUPPETEER_CACHE_DIR = '/opt/render/project/src/.cache/puppeteer';
-
-process.on('uncaughtException', (err) => {
-    console.error('ERRO NÃO CAPTURADO:', err);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-    console.error('REJEIÇÃO NÃO TRATADA:', reason);
-});
-
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const express = require('express');
 const qrcode = require('qrcode');
@@ -23,7 +13,6 @@ const client = new Client({
         clientId: 'prime-session'
     }),
     puppeteer: {
-        executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
         headless: true,
         args: [
             '--no-sandbox',
@@ -34,8 +23,7 @@ const client = new Client({
             '--no-zygote',
             '--disable-gpu',
             '--single-process',
-            '--disable-extensions',
-            '--disable-web-security'
+            '--disable-extensions'
         ]
     }
 });
@@ -47,10 +35,9 @@ client.on('qr', (qr) => {
     }
 });
 
-// Força a limpeza imediata assim que autentica no celular
 client.on('authenticated', () => {
     console.log('WhatsApp autenticado com sucesso!');
-    qrCodeData = ''; // Limpa o QR Code imediatamente para sumir da tela
+    qrCodeData = '';
 });
 
 client.on('auth_failure', (msg) => {
@@ -79,18 +66,16 @@ app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send(`
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
-                <h1 style="color: #25D366;">✔ WhatsApp Conectado e Pronto para Uso!</h1>
-                <p>A API já está ativa e integrada ao seu site.</p>
+                <h1 style="color: #25D366;">✔ WhatsApp Conectado no Notebook!</h1>
+                <p>A API local está ativa e funcionando perfeitamente.</p>
             </div>
         `);
     }
 
-    // Se autenticou mas ainda está carregando o ready
     if (!qrCodeData && !isClientReady) {
         return res.send(`
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
-                <h2 style="color: #e67e22;">Dispositivo conectado! Carregando dados da sessão...</h2>
-                <p>Atualize esta página em 10 segundos.</p>
+                <h2 style="color: #e67e22;">Iniciando o navegador... Aguarde e atualize.</h2>
             </div>
         `);
     }
@@ -101,7 +86,6 @@ app.get('/', async (req, res) => {
             <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp"/>
-                <p style="margin-top:20px; color: #666;">Após escanear, atualize esta página.</p>
             </div>
         `);
     } catch (err) {
@@ -113,11 +97,11 @@ app.post('/verificar', async (req, res) => {
     const { telefone } = req.body;
 
     if (!isClientReady) {
-        return res.status(400).json({ status: false, mensagem: 'WhatsApp ainda não está conectado no servidor.' });
+        return res.status(400).json({ status: false, mensagem: 'WhatsApp ainda não está conectado.' });
     }
 
     if (!telefone) {
-        return res.status(400).json({ status: false, mensagem: 'Número de telefone não informado.' });
+        return res.status(400).json({ status: false, mensagem: 'Número não informado.' });
     }
 
     try {
@@ -138,5 +122,5 @@ app.post('/verificar', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando localmente na porta ${PORT}`);
 });
