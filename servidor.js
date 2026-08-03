@@ -37,12 +37,20 @@ const client = new Client({
 });
 
 client.on('qr', (qr) => {
-    console.log('Novo QR Code gerado.');
-    qrCodeData = qr;
+    if (!isClientReady) {
+        console.log('Novo QR Code gerado.');
+        qrCodeData = qr;
+    }
 });
 
 client.on('ready', () => {
     console.log('WhatsApp conectado com sucesso!');
+    isClientReady = true;
+    qrCodeData = ''; // Limpa o QR Code imediatamente
+});
+
+client.on('authenticated', () => {
+    console.log('WhatsApp autenticado com sucesso!');
     isClientReady = true;
     qrCodeData = '';
 });
@@ -52,20 +60,35 @@ client.on('auth_failure', (msg) => {
     isClientReady = false;
 });
 
+client.on('disconnected', (reason) => {
+    console.log('WhatsApp desconectado:', reason);
+    isClientReady = false;
+    client.initialize();
+});
+
 client.initialize();
 
 app.get('/', async (req, res) => {
     if (isClientReady) {
-        return res.send('<h1>WhatsApp já está conectado e pronto para uso!</h1>');
+        return res.send(`
+            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
+                <h1 style="color: #25D366;">✔ WhatsApp Conectado e Pronto para Uso!</h1>
+                <p>A API já pode receber requisições do seu site.</p>
+            </div>
+        `);
     }
     if (!qrCodeData) {
-        return res.send('<h1>Gerando QR Code, aguarde alguns segundos e atualize a página...</h1>');
+        return res.send(`
+            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
+                <h2>Iniciando sessão, aguarde alguns segundos e atualize a página...</h2>
+            </div>
+        `);
     }
     
     try {
         const urlImage = await qrcode.toDataURL(qrCodeData);
         res.send(`
-            <div style="text-align:center; margin-top:50px;">
+            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp"/>
             </div>
@@ -79,7 +102,7 @@ app.post('/verificar', async (req, res) => {
     const { telefone } = req.body;
 
     if (!isClientReady) {
-        return res.status(400).json({ status: false, mensagem: 'WhatsApp ainda não está conectado.' });
+        return res.status(400).json({ status: false, mensagem: 'WhatsApp ainda não está conectado no servidor.' });
     }
 
     if (!telefone) {
