@@ -4,11 +4,13 @@
   "description": "API integradora de whatsapp para plugin de confirmacao",
   "main": "servidor.js",
   "scripts": {
-    "start": "node servidor.js"
+    "start": "node servidor.js",
+    "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "express": "^4.19.2",
     "whatsapp-web.js": "^1.23.0",
-    "qrcode": "^1.5.3"
+    "qrcode": "^1.5.3",
+    "puppeteer": "^22.0.0"
   }
 }
