@@ -11,8 +11,7 @@ let isClientReady = false;
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        headless: true,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/opt/render/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
@@ -43,7 +42,6 @@ client.on('auth_failure', (msg) => {
 
 client.initialize();
 
-// Rota para exibir o QR Code no navegador
 app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send('<h1>WhatsApp já está conectado e pronto para uso!</h1>');
@@ -65,7 +63,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-// Rota para verificar o status do número
 app.post('/verificar', async (req, res) => {
     const { telefone } = req.body;
 
