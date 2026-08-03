@@ -21,7 +21,7 @@ let isClientReady = false;
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
+        executablePath: '/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
         headless: true,
         args: [
             '--no-sandbox',
@@ -31,7 +31,9 @@ const client = new Client({
             '--no-first-run',
             '--no-zygote',
             '--disable-gpu',
-            '--single-process'
+            '--single-process',
+            '--disable-extensions',
+            '--disable-software-rasterizer'
         ]
     }
 });
@@ -46,7 +48,7 @@ client.on('qr', (qr) => {
 client.on('ready', () => {
     console.log('WhatsApp conectado com sucesso!');
     isClientReady = true;
-    qrCodeData = ''; // Limpa o QR Code imediatamente
+    qrCodeData = '';
 });
 
 client.on('authenticated', () => {
