@@ -33,7 +33,8 @@ const client = new Client({
             '--disable-gpu',
             '--single-process',
             '--disable-extensions',
-            '--disable-software-rasterizer'
+            '--disable-web-security',
+            '--ignore-certificate-errors'
         ]
     }
 });
