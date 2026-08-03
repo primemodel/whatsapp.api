@@ -5,7 +5,7 @@
   "main": "servidor.js",
   "scripts": {
     "start": "node servidor.js",
-    "postinstall": "PUPPETEER_CACHE_DIR=./.cache/puppeteer npx puppeteer browsers install chrome@146.0.7680.31"
+    "postinstall": "PUPPETEER_CACHE_DIR=/opt/render/project/src/.cache/puppeteer npx puppeteer browsers install chrome@146.0.7680.31"
   },
   "dependencies": {
     "express": "^4.19.2",
