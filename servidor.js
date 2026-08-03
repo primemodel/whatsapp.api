@@ -7,6 +7,7 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
+const puppeteer = require('puppeteer');
 const express = require('express');
 const qrcode = require('qrcode');
 
@@ -19,6 +20,7 @@ let isClientReady = false;
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
+        executablePath: puppeteer.executablePath(),
         headless: true,
         args: [
             '--no-sandbox',
@@ -28,8 +30,7 @@ const client = new Client({
             '--no-first-run',
             '--no-zygote',
             '--disable-gpu',
-            '--single-process',
-            '--no-zygote'
+            '--single-process'
         ]
     }
 });
@@ -90,7 +91,7 @@ app.post('/verificar', async (req, res) => {
 
         const registered = await client.isRegisteredUser(chatId);
         if (registered) {
-            return res.json({ status: false, mensagem: 'Número possui WhatsApp válido.' });
+            return res.json({ status: true, mensagem: 'Número possui WhatsApp válido.' });
         } else {
             return res.json({ status: false, mensagem: 'Número não cadastrado no WhatsApp.' });
         }
