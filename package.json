@@ -4,7 +4,8 @@
   "description": "",
   "main": "servidor.js",
   "scripts": {
-    "start": "node servidor.js"
+    "start": "node servidor.js",
+    "postinstall": "npx puppeteer browsers install chrome@146.0.7680.31"
   },
   "dependencies": {
     "express": "^4.19.2",
