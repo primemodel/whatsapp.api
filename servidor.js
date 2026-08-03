@@ -1,3 +1,11 @@
+process.on('uncaughtException', (err) => {
+    console.error('ERRO NÃO CAPTURADO:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('REJEIÇÃO NÃO TRATADA:', reason);
+});
+
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const express = require('express');
 const qrcode = require('qrcode');
