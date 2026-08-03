@@ -7,7 +7,6 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 const { Client, LocalAuth } = require('whatsapp-web.js');
-const puppeteer = require('puppeteer');
 const express = require('express');
 const qrcode = require('qrcode');
 
@@ -20,7 +19,7 @@ let isClientReady = false;
 const client = new Client({
     authStrategy: new LocalAuth(),
     puppeteer: {
-        executablePath: puppeteer.executablePath(),
+        executablePath: '/opt/render/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
         headless: true,
         args: [
             '--no-sandbox',
