@@ -1,7 +1,7 @@
 {
   "name": "integracao-whatsapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "API WhatsApp para WordPress",
   "main": "servidor.js",
   "scripts": {
     "start": "node servidor.js",
@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "puppeteer": "^22.15.0",
     "qrcode": "^1.5.3",
-    "whatsapp-web.js": "^1.23.0"
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-ex"
+  },
+  "devDependencies": {
+    "puppeteer": "^22.12.1"
   }
 }
