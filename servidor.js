@@ -3,6 +3,28 @@ const express = require('express');
 const qrcode = require('qrcode');
 
 const app = express();
+
+// Libera o CORS para permitir requisições de qualquer painel WordPress
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
+app.use(express.json());
+
+let qrCodeData = '';
+let isClientReady = false;
+
+// (Mantenha o restante da sua inicialização do Client do WhatsApp, eventos e rotas exatamente como estavam)const { Client, LocalAuth } = require('whatsapp-web.js');
+const express = require('express');
+const qrcode = require('qrcode');
+
+const app = express();
 app.use(express.json());
 
 let qrCodeData = '';
