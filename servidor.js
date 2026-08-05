@@ -69,36 +69,63 @@ client.on('disconnected', (reason) => {
 
 client.initialize();
 
+// ---> INÍCIO DO TRECHO ALTERADO <---
 app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send(`
-            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>WhatsApp Conectado</title>
+            </head>
+            <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h1 style="color: #25D366;">✔ WhatsApp Conectado com Sucesso!</h1>
                 <p>A API na nuvem está pronta para receber os disparos do WordPress.</p>
-            </div>
+            </body>
+            </html>
         `);
     }
 
     if (!qrCodeData) {
         return res.send(`
-            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
-                <h2 style="color: #e67e22;">Gerando QR Code, aguarde alguns segundos e atualize a página...</h2>
-            </div>
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="refresh" content="3">
+                <title>Gerando QR Code</title>
+            </head>
+            <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
+                <h2 style="color: #e67e22;">Gerando QR Code, aguarde um instante...</h2>
+                <p>A página será atualizada automaticamente.</p>
+            </body>
+            </html>
         `);
     }
     
     try {
         const urlImage = await qrcode.toDataURL(qrCodeData);
         res.send(`
-            <div style="text-align:center; margin-top:50px; font-family: sans-serif;">
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="refresh" content="5">
+                <title>Conectar WhatsApp</title>
+            </head>
+            <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o seu WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp" style="width:300px; height:300px;"/>
-            </div>
+                <p style="color: #666; font-size: 14px; margin-top: 15px;">Esta página se atualizará sozinha assim que o aparelho for conectado.</p>
+            </body>
+            </html>
         `);
     } catch (err) {
         res.status(500).send('Erro ao gerar a imagem do QR Code.');
     }
 });
+// ---> FIM DO TRECHO ALTERADO <---
 
 app.post('/verificar', async (req, res) => {
     const { telefone } = req.body;
