@@ -7,14 +7,16 @@ app.use(express.json());
 
 let qrCodeData = '';
 let isClientReady = false;
+
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Erro não tratado capturado:', reason);
 });
+
 const client = new Client({
     authStrategy: new LocalAuth({
         clientId: 'prime-session'
     }),
-   puppeteer: {
+    puppeteer: {
         headless: true,
         executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome',
         args: [
@@ -24,7 +26,7 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
-            '--single-process', // <-- Essencial para economizar recursos
+            '--single-process',
             '--disable-gpu',
             '--disable-software-rasterizer',
             '--disable-extensions',
@@ -42,6 +44,7 @@ const client = new Client({
             '--no-pings'
         ]
     }
+});
 
 client.on('qr', (qr) => {
     console.log('Novo QR Code gerado.');
@@ -73,7 +76,6 @@ client.on('disconnected', (reason) => {
 
 client.initialize();
 
-// ---> INÍCIO DO TRECHO ALTERADO <---
 app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send(`
@@ -129,7 +131,6 @@ app.get('/', async (req, res) => {
         res.status(500).send('Erro ao gerar a imagem do QR Code.');
     }
 });
-// ---> FIM DO TRECHO ALTERADO <---
 
 app.post('/verificar', async (req, res) => {
     const { telefone } = req.body;
