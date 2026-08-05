@@ -7,7 +7,9 @@ app.use(express.json());
 
 let qrCodeData = '';
 let isClientReady = false;
-
+process.on('unhandledRejection', (reason, promise) => {
+    console.error('Erro não tratado capturado:', reason);
+});
 const client = new Client({
     authStrategy: new LocalAuth({
         clientId: 'prime-session'
