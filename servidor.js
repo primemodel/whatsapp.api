@@ -20,16 +20,6 @@ app.use(express.json());
 let qrCodeData = '';
 let isClientReady = false;
 
-// (Mantenha o restante da sua inicialização do Client do WhatsApp, eventos e rotas exatamente como estavam)const { Client, LocalAuth } = require('whatsapp-web.js');
-const express = require('express');
-const qrcode = require('qrcode');
-
-const app = express();
-app.use(express.json());
-
-let qrCodeData = '';
-let isClientReady = false;
-
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Erro não tratado capturado:', reason);
 });
