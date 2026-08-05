@@ -12,7 +12,7 @@ const client = new Client({
     authStrategy: new LocalAuth({
         clientId: 'prime-session'
     }),
-    puppeteer: {
+   puppeteer: {
         headless: true,
         executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome',
         args: [
@@ -22,22 +22,24 @@ const client = new Client({
             '--disable-accelerated-2d-canvas',
             '--no-first-run',
             '--no-zygote',
+            '--single-process', // <-- Essencial para economizar recursos
             '--disable-gpu',
-            '--single-process',
+            '--disable-software-rasterizer',
             '--disable-extensions',
-            '--disable-infobars',
-            '--window-position=0,0',
-            '--ignore-certificate-errors',
-            '--ignore-certificate-errors-spki-list',
-            '--disable-features=IsolateOrigins,site-per-process',
-            '--aggressive-cache-discard',
-            '--disable-cache',
-            '--disable-application-cache',
-            '--disable-offline-load-stale-cache',
-            '--disk-cache-size=0'
+            '--mute-audio',
+            '--disable-background-timer-throttling',
+            '--disable-backgrounding-occluded-windows',
+            '--disable-breakpad',
+            '--disable-component-extensions-with-background-pages',
+            '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+            '--disable-ipc-flooding-protection',
+            '--disable-renderer-backgrounding',
+            '--enable-features=NetworkService,NetworkServiceInProcess',
+            '--force-color-profile=srgb',
+            '--metrics-recording-only',
+            '--no-pings'
         ]
     }
-});
 
 client.on('qr', (qr) => {
     console.log('Novo QR Code gerado.');
