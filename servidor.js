@@ -35,13 +35,18 @@ const client = new Client({
             '--disable-backgrounding-occluded-windows',
             '--disable-breakpad',
             '--disable-component-extensions-with-background-pages',
-            '--disable-features=TranslateUI,BlinkGenPropertyTrees',
+            '--disable-features=TranslateUI,BlinkGenPropertyTrees,IsolateOrigins,site-per-process',
             '--disable-ipc-flooding-protection',
             '--disable-renderer-backgrounding',
             '--enable-features=NetworkService,NetworkServiceInProcess',
             '--force-color-profile=srgb',
             '--metrics-recording-only',
-            '--no-pings'
+            '--no-pings',
+            '--hide-scrollbars',
+            '--lamp',
+            '--disable-canvas-aa',
+            '--disable-2d-canvas-clip-aa',
+            '--disable-gl-drawing-for-tests'
         ]
     }
 });
