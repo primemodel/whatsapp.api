@@ -2,13 +2,19 @@ const { Client, LocalAuth } = require('whatsapp-web.js');
 const express = require('express');
 const qrcode = require('qrcode');
 
+const app = express();
+app.use(express.json());
+
+let qrCodeData = '';
+let isClientReady = false;
+
 const client = new Client({
     authStrategy: new LocalAuth({
         clientId: 'prime-session'
     }),
     puppeteer: {
         headless: true,
-        executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-146.0.7680.31/chrome-linux64/chrome',
+        executablePath: '/opt/render/project/src/.cache/puppeteer/chrome/linux-127.0.6533.88/chrome-linux64/chrome',
         args: [
             '--no-sandbox',
             '--disable-setuid-sandbox',
