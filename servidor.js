@@ -76,15 +76,13 @@ client.on('disconnected', (reason) => {
 
 client.initialize();
 
+// Rota Principal (navegador)
 app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send(`
             <!DOCTYPE html>
             <html>
-            <head>
-                <meta charset="UTF-8">
-                <title>WhatsApp Conectado</title>
-            </head>
+            <head><meta charset="UTF-8"><title>WhatsApp Conectado</title></head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h1 style="color: #25D366;">✔ WhatsApp Conectado com Sucesso!</h1>
                 <p>A API na nuvem está pronta para receber os disparos do WordPress.</p>
@@ -97,11 +95,7 @@ app.get('/', async (req, res) => {
         return res.send(`
             <!DOCTYPE html>
             <html>
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="refresh" content="2">
-                <title>Aguardando QR Code</title>
-            </head>
+            <head><meta charset="UTF-8"><meta http-equiv="refresh" content="2"><title>Aguardando QR Code</title></head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2 style="color: #e67e22;">Iniciando o navegador e gerando o QR Code...</h2>
                 <p>Isso pode levar alguns segundos. A página atualizará sozinha.</p>
@@ -115,11 +109,7 @@ app.get('/', async (req, res) => {
         res.send(`
             <!DOCTYPE html>
             <html>
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="refresh" content="10">
-                <title>Conectar WhatsApp</title>
-            </head>
+            <head><meta charset="UTF-8"><meta http-equiv="refresh" content="10"><title>Conectar WhatsApp</title></head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o seu WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp" style="width:300px; height:300px;"/>
@@ -129,6 +119,24 @@ app.get('/', async (req, res) => {
         `);
     } catch (err) {
         res.status(500).send('Erro ao gerar a imagem do QR Code.');
+    }
+});
+
+// NOVA ROTA: Retorna o status e o QR Code em JSON para consumo via WordPress/Snippet
+app.get('/qrcode', async (req, res) => {
+    if (isClientReady) {
+        return res.json({ status: 'conectado', mensagem: 'O WhatsApp já está conectado!' });
+    }
+
+    if (!qrCodeData) {
+        return res.json({ status: 'gerando', mensagem: 'QR Code ainda está sendo gerado, tente novamente em instantes.' });
+    }
+
+    try {
+        const urlImage = await qrcode.toDataURL(qrCodeData);
+        return res.json({ status: 'qrcode_disponivel', imagem_base64: urlImage });
+    } catch (err) {
+        return res.status(500).json({ status: 'erro', mensagem: 'Erro ao converter o QR Code.' });
     }
 });
 
