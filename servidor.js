@@ -41,12 +41,7 @@ const client = new Client({
             '--enable-features=NetworkService,NetworkServiceInProcess',
             '--force-color-profile=srgb',
             '--metrics-recording-only',
-            '--no-pings',
-            '--hide-scrollbars',
-            '--lamp',
-            '--disable-canvas-aa',
-            '--disable-2d-canvas-clip-aa',
-            '--disable-gl-drawing-for-tests'
+            '--no-pings'
         ]
     }
 });
@@ -77,11 +72,16 @@ client.on('disconnected', (reason) => {
     console.log('WhatsApp desconectado:', reason);
     isClientReady = false;
     qrCodeData = '';
+    setTimeout(() => {
+        console.log('Tentando reiniciar o cliente do WhatsApp...');
+        client.initialize().catch(err => console.error('Erro ao reiniciar:', err));
+    }, 5000);
 });
 
-client.initialize();
+client.initialize().catch(err => {
+    console.error('Erro fatal ao inicializar o cliente:', err);
+});
 
-// Rota Principal (navegador)
 app.get('/', async (req, res) => {
     if (isClientReady) {
         return res.send(`
@@ -100,7 +100,7 @@ app.get('/', async (req, res) => {
         return res.send(`
             <!DOCTYPE html>
             <html>
-            <head><meta charset="UTF-8"><meta http-equiv="refresh" content="2"><title>Aguardando QR Code</title></head>
+            <head><meta charset="UTF-8"><meta http-equiv="refresh" content="3"><title>Aguardando QR Code</title></head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2 style="color: #e67e22;">Iniciando o navegador e gerando o QR Code...</h2>
                 <p>Isso pode levar alguns segundos. A página atualizará sozinha.</p>
@@ -127,7 +127,6 @@ app.get('/', async (req, res) => {
     }
 });
 
-// NOVA ROTA: Retorna o status e o QR Code em JSON para consumo via WordPress/Snippet
 app.get('/qrcode', async (req, res) => {
     if (isClientReady) {
         return res.json({ status: 'conectado', mensagem: 'O WhatsApp já está conectado!' });
