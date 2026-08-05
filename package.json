@@ -10,7 +10,7 @@
   "dependencies": {
     "express": "^4.19.2",
     "qrcode": "^1.5.3",
-    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#webpack-ex"
+    "whatsapp-web.js": "^1.23.0"
   },
   "devDependencies": {
     "puppeteer": "^22.12.1"
