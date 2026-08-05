@@ -99,12 +99,12 @@ app.get('/', async (req, res) => {
             <html>
             <head>
                 <meta charset="UTF-8">
-                <meta http-equiv="refresh" content="3">
-                <title>Gerando QR Code</title>
+                <meta http-equiv="refresh" content="2">
+                <title>Aguardando QR Code</title>
             </head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
-                <h2 style="color: #e67e22;">Gerando QR Code, aguarde um instante...</h2>
-                <p>A página será atualizada automaticamente.</p>
+                <h2 style="color: #e67e22;">Iniciando o navegador e gerando o QR Code...</h2>
+                <p>Isso pode levar alguns segundos. A página atualizará sozinha.</p>
             </body>
             </html>
         `);
@@ -117,13 +117,13 @@ app.get('/', async (req, res) => {
             <html>
             <head>
                 <meta charset="UTF-8">
-                <meta http-equiv="refresh" content="5">
+                <meta http-equiv="refresh" content="10">
                 <title>Conectar WhatsApp</title>
             </head>
             <body style="text-align:center; margin-top:50px; font-family: sans-serif;">
                 <h2>Escaneie o QR Code abaixo com o seu WhatsApp</h2>
                 <img src="${urlImage}" alt="QR Code WhatsApp" style="width:300px; height:300px;"/>
-                <p style="color: #666; font-size: 14px; margin-top: 15px;">Esta página se atualizará sozinha assim que o aparelho for conectado.</p>
+                <p style="color: #666; font-size: 14px; margin-top: 15px;">O QR Code expira rápido. Esta página atualizará sozinha para gerar um novo se necessário.</p>
             </body>
             </html>
         `);
